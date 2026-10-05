@@ -23,19 +23,19 @@
 
 ### 2. SQL Server'ı Docker'da başlat
 ```bash
-docker run -d --name apiproject-sql --platform linux/amd64 \
+docker run -d --name apiproject-sql-1434 --platform linux/amd64 \
   -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=ApiProject_Sql_2026' \
-  -p 1433:1433 -v apiproject-sql-data:/var/opt/mssql \
+  -p 1434:1433 -v apiproject-sql-1434-data:/var/opt/mssql \
   mcr.microsoft.com/mssql/server:2022-latest
 ```
 - Apple Silicon (M1/M2/M3/M4) Mac'te Docker Desktop > Settings > General altında **"Use Rosetta for x86_64/amd64 emulation on Apple Silicon"** açık olmalı. SQL Server imajı yalnızca amd64 için yayınlanıyor.
-- Veriler `apiproject-sql-data` volume'unda kalır, container silinse bile kaybolmaz.
-- Sonraki seferlerde `docker start apiproject-sql` yeterli.
-- Hazır olup olmadığını görmek için: `docker logs apiproject-sql | grep "Recovery is complete"`
+- Veriler `apiproject-sql-1434-data` volume'unda kalır, container silinse bile kaybolmaz.
+- Sonraki seferlerde `docker start apiproject-sql-1434` yeterli.
+- Hazır olup olmadığını görmek için: `docker logs apiproject-sql-1434 | grep "Recovery is complete"`
 
 `src/ApiProject.Api/appsettings.json` içindeki bağlantı cümlesi bu container'a göre ayarlı:
 ```
-Server=localhost,1433;Database=ApiProjectDb;User Id=sa;Password=ApiProject_Sql_2026;TrustServerCertificate=True
+Server=localhost,1434;Database=ApiProjectDb;User Id=sa;Password=ApiProject_Sql_2026;TrustServerCertificate=True
 ```
 Bu şifre yalnızca yerel geliştirme içindir. Canlı ortamda bağlantı cümlesini `ConnectionStrings__Default` environment variable'ı ile ver.
 
@@ -83,12 +83,9 @@ Adres her zaman `http://localhost:5000/...` olsun. Domaini taklit etmek için **
 Hazır istekler `src/ApiProject.Api/ApiProject.Api.http` dosyasında. Bu dosyayı Visual Studio ya da VS Code (REST Client eklentisi) ile tek tıkla çalıştırabilirsin.
 
 ### "Login failed for user 'sa'" (Error 18456)
-Bağlantı cümlesindeki şifre, container ilk kurulduğunda verilen şifreyle uyuşmuyor demektir. SQL Server `sa` şifresini volume'daki veritabanına ilk açılışta yazar. Sonradan `MSSQL_SA_PASSWORD` değiştirmek eski volume'u etkilemez. Bunu çözmek için container'ı ve volume'u silip baştan kur (veritabanı da silinir, uygulama ilk açılışta yeniden oluşturur):
-```bash
-docker rm -f apiproject-sql
-docker volume rm apiproject-sql-data
-```
-Ardından "SQL Server'ı Docker'da başlat" adımındaki `docker run` komutunu tekrar çalıştır. 1433 portunu başka bir container kullanıyorsa `docker ps` ile bul ve durdur.
+Bağlantı cümlesindeki şifre, container ilk kurulduğunda verilen şifreyle uyuşmuyor demektir. SQL Server `sa` şifresini ilk açılışta volume'a yazar. Sonradan `MSSQL_SA_PASSWORD` değerini değiştirmek mevcut bir volume'u etkilemez.
+
+Başka bir projenin SQL container'ına dokunmamak için bu proje ayrı bir container (`apiproject-sql-1434`), ayrı bir volume (`apiproject-sql-1434-data`) ve ayrı bir port (1434) kullanır. Bilgisayarındaki başka bir SQL Server 1433'te çalışmaya devam edebilir. Uygulamanın doğru container'a bağlandığından emin olmak için bağlantı cümlesinde `localhost,1434` yazdığını kontrol et.
 
 ### Hesap kilitlenirse
 5 hatalı denemeden sonra kullanıcı 15 dakika kilitlenir. Beklemek istemezsen SQL'de şunu çalıştır:
