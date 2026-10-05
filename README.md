@@ -24,6 +24,8 @@ Projeyi Claude Code ile geliştirdim. Kod yazılmadan önce tablo yapısını ve
 | ABC / admin / Abc123! | 200, token döndü |
 | XYZ / admin / Abc123! | 401, XYZ'deki admin farklı kullanıcı |
 | XYZ / admin / Xyz123! | 200, token döndü |
+| abc.localhost üzerinden config isteği | 200, ABC'nin ayarları döndü |
+| xyz.localhost üzerinden config isteği | 200, XYZ'nin ayarları döndü |
 
 ## Çalıştırma
 1. SQL Server'ı Docker'da başlat:
