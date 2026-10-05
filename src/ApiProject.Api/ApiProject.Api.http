@@ -1,0 +1,32 @@
+@base = http://localhost:5000
+
+### 1) Domainden firma config: ABC
+GET {{base}}/api/firma/config
+Host: abc.localhost
+
+### 2) Domainden firma config: XYZ
+GET {{base}}/api/firma/config
+Host: xyz.localhost
+
+### 3) Login: localhost'tan, firmaKodu body'de (ABC)
+# @name loginAbc
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "firmaKodu": "ABC", "kullaniciAdi": "admin", "sifre": "Abc123!" }
+
+### 4) Login: aynı kullanıcı adı, XYZ firması (domainden)
+POST {{base}}/api/auth/login
+Host: xyz.localhost
+Content-Type: application/json
+
+{ "kullaniciAdi": "admin", "sifre": "Xyz123!" }
+
+### 5) Token ile korumalı endpoint
+GET {{base}}/api/auth/ben
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+
+### 6) ABC token'ı XYZ domaininde -> 403
+GET {{base}}/api/auth/ben
+Host: xyz.localhost
+Authorization: Bearer {{loginAbc.response.body.$.token}}
