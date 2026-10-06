@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<FirmaAyar> FirmaAyarlari => Set<FirmaAyar>();
     public DbSet<Kullanici> Kullanicilar => Set<Kullanici>();
     public DbSet<Urun> Urunler => Set<Urun>();
+    public DbSet<SepetKalemi> SepetKalemleri => Set<SepetKalemi>();
 
     private Guid? AktifFirmaId => _firmaBaglami.FirmaId;
 
