@@ -71,6 +71,6 @@ public class AuthService
         await _db.SaveChangesAsync(ct);
 
         var (token, bitis) = _jwt.Uret(kullanici, _firmaBaglami.FirmaKodu!);
-        return new LoginSonuc(LoginHata.Yok, new LoginResponse(token, bitis, _firmaBaglami.FirmaKodu!, kullanici.KullaniciAdi));
+        return new LoginSonuc(LoginHata.Yok, new LoginResponse(token, bitis, _firmaBaglami.FirmaKodu!, kullanici.KullaniciAdi, kullanici.YoneticiMi));
     }
 }

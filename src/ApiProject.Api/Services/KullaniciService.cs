@@ -64,6 +64,6 @@ public class KullaniciService
         }
 
         return new KayitSonuc(KayitHata.Yok, new KullaniciDto(
-            kullanici.Id, kullanici.KullaniciAdi, kullanici.Email, kullanici.AdSoyad, kullanici.AktifMi, kullanici.OlusturmaTarihi));
+            kullanici.Id, kullanici.KullaniciAdi, kullanici.Email, kullanici.AdSoyad, kullanici.AktifMi, kullanici.YoneticiMi, kullanici.OlusturmaTarihi));
     }
 }
