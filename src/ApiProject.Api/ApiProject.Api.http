@@ -31,3 +31,113 @@ Authorization: Bearer {{loginAbc.response.body.$.token}}
 GET {{base}}/api/auth/ben
 Host: xyz.localhost
 Authorization: Bearer {{loginAbc.response.body.$.token}}
+
+### Login: XYZ admin (X-Client)
+# @name loginXyz
+POST {{base}}/api/auth/login
+X-Client: XYZ
+Content-Type: application/json
+
+{ "kullaniciAdi": "admin", "sifre": "Xyz123!" }
+
+### Kullanıcı kaydı: ABC ayse (201)
+POST {{base}}/api/kullanicilar
+X-Client: ABC
+Content-Type: application/json
+
+{ "kullaniciAdi": "ayse", "sifre": "Ayse123!" }
+
+### Kullanıcı kaydı: XYZ ayse (201, farklı firmada aynı ad)
+POST {{base}}/api/kullanicilar
+X-Client: XYZ
+Content-Type: application/json
+
+{ "kullaniciAdi": "ayse", "sifre": "Ayse456!" }
+
+### Kullanıcı kaydı: ABC ayse tekrar (409)
+POST {{base}}/api/kullanicilar
+X-Client: ABC
+Content-Type: application/json
+
+{ "kullaniciAdi": "ayse", "sifre": "Ayse123!" }
+
+### Login: ABC ayse
+# @name loginAyse
+POST {{base}}/api/auth/login
+X-Client: ABC
+Content-Type: application/json
+
+{ "kullaniciAdi": "ayse", "sifre": "Ayse123!" }
+
+### Ürün ekle: ABC admin
+# @name urunKalem
+POST {{base}}/api/urunler
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+Content-Type: application/json
+
+{ "kod": "KLM-1", "ad": "Mavi Kalem", "fiyat": 12.5, "stok": 10 }
+
+### Ürün ekle: ABC admin, pasif ürün
+# @name urunSilgi
+POST {{base}}/api/urunler
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+Content-Type: application/json
+
+{ "kod": "SLG-1", "ad": "Silgi", "fiyat": 5, "stok": 100, "aktifMi": false }
+
+### Ürün ara: ABC
+GET {{base}}/api/urunler?arama=Kalem
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+
+### Ürün ara: XYZ (ABC'nin ürünleri görünmez)
+GET {{base}}/api/urunler?arama=Kalem
+Authorization: Bearer {{loginXyz.response.body.$.token}}
+
+### Sepete ekle: ayse, 3 kalem
+POST {{base}}/api/sepet/urunler
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+Content-Type: application/json
+
+{ "urunId": "{{urunKalem.response.body.$.id}}", "adet": 3 }
+
+### Sepete ekle: stoktan fazla (400)
+POST {{base}}/api/sepet/urunler
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+Content-Type: application/json
+
+{ "urunId": "{{urunKalem.response.body.$.id}}", "adet": 50 }
+
+### Sepete ekle: pasif ürün (400)
+POST {{base}}/api/sepet/urunler
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+Content-Type: application/json
+
+{ "urunId": "{{urunSilgi.response.body.$.id}}", "adet": 1 }
+
+### Sepeti görüntüle
+GET {{base}}/api/sepet
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+
+### Sepetten çıkar
+DELETE {{base}}/api/sepet/urunler/{{urunKalem.response.body.$.id}}
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+
+### Sipariş oluştur (önce sepete ürün ekleyin)
+POST {{base}}/api/siparisler
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+
+### Siparişlerim
+GET {{base}}/api/siparisler
+Authorization: Bearer {{loginAyse.response.body.$.token}}
+
+### Yönetim: ABC siparişleri
+GET {{base}}/api/yonetim/siparisler
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+
+### Yönetim: ABC kullanıcıları
+GET {{base}}/api/yonetim/kullanicilar
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+
+### Yönetim: yönetici olmayan kullanıcı (403)
+GET {{base}}/api/yonetim/kullanicilar
+Authorization: Bearer {{loginAyse.response.body.$.token}}
