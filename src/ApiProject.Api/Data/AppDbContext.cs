@@ -19,7 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<FirmaAyar> FirmaAyarlari => Set<FirmaAyar>();
     public DbSet<Kullanici> Kullanicilar => Set<Kullanici>();
 
-    private int? AktifFirmaId => _firmaBaglami.FirmaId;
+    private Guid? AktifFirmaId => _firmaBaglami.FirmaId;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

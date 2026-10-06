@@ -2,7 +2,7 @@ namespace ApiProject.Api.Entities;
 
 public class Firma
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string FirmaKodu { get; set; } = null!;
     public string FirmaAdi { get; set; } = null!;
     public bool AktifMi { get; set; } = true;

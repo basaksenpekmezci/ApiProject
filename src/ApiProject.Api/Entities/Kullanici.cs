@@ -2,8 +2,8 @@ namespace ApiProject.Api.Entities;
 
 public class Kullanici
 {
-    public int Id { get; set; }
-    public int FirmaId { get; set; }
+    public Guid Id { get; set; }
+    public Guid FirmaId { get; set; }
     public string KullaniciAdi { get; set; } = null!;
     public string NormalizeKullaniciAdi { get; set; } = null!;
     public string SifreHash { get; set; } = null!;

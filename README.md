@@ -51,3 +51,20 @@ cp appsettings.Development.example.json appsettings.Development.json
 dotnet run
 ```
 5. http://localhost:5000/swagger adresini aç. Login'de `X-Client` alanına firma kodunu (`ABC` ya da `XYZ`) yaz.
+
+## Veritabanını sıfırlama
+Tüm ID'ler `int`'ten `Guid`'e çevrildiği için eski migration silindi ve yerine tek bir yeni `IlkKurulum` migration'ı geldi. Eski veritabanı bu migration ile uyumlu değil, bu yüzden bir kez silinip yeniden kurulmalı. Sadece bu projenin `apiproject-sql-1434` container'ındaki `ApiProjectDb` veritabanı silinir, diğer container'lara dokunulmaz.
+
+1. Uygulama çalışıyorsa durdur.
+2. Veritabanını sil (iki yoldan biri yeterli):
+```bash
+# a) EF Core aracıyla (bir kez kurmak gerekir: dotnet tool install -g dotnet-ef --version 8.*)
+cd src/ApiProject.Api
+dotnet ef database drop -f
+
+# b) Container içindeki sqlcmd ile
+docker exec -it apiproject-sql-1434 /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P 'ApiProject_Sql_2026' -C \
+  -Q "ALTER DATABASE ApiProjectDb SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE ApiProjectDb;"
+```
+3. `dotnet run` ile uygulamayı başlat. Veritabanı, tablolar ve örnek veri yeniden oluşur.

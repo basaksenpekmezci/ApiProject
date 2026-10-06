@@ -24,11 +24,9 @@ namespace ApiProject.Api.Data.Migrations
 
             modelBuilder.Entity("ApiProject.Api.Entities.Firma", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("AktifMi")
                         .HasColumnType("bit")
@@ -58,7 +56,7 @@ namespace ApiProject.Api.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("10000000-0000-0000-0000-000000000001"),
                             AktifMi = true,
                             FirmaAdi = "ABC Teknoloji",
                             FirmaKodu = "ABC",
@@ -66,7 +64,7 @@ namespace ApiProject.Api.Data.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("10000000-0000-0000-0000-000000000002"),
                             AktifMi = true,
                             FirmaAdi = "XYZ Lojistik",
                             FirmaKodu = "XYZ",
@@ -76,8 +74,8 @@ namespace ApiProject.Api.Data.Migrations
 
             modelBuilder.Entity("ApiProject.Api.Entities.FirmaAyar", b =>
                 {
-                    b.Property<int>("FirmaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FirmaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Dil")
                         .IsRequired()
@@ -120,7 +118,7 @@ namespace ApiProject.Api.Data.Migrations
                     b.HasData(
                         new
                         {
-                            FirmaId = 1,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000001"),
                             Dil = "tr-TR",
                             EkAyarlarJson = "{\"destekTelefonu\":\"0212 000 00 00\",\"modulStok\":true}",
                             GuncellemeTarihi = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -130,7 +128,7 @@ namespace ApiProject.Api.Data.Migrations
                         },
                         new
                         {
-                            FirmaId = 2,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000002"),
                             Dil = "en-US",
                             EkAyarlarJson = "{\"destekTelefonu\":\"+44 20 0000 0000\",\"modulStok\":false}",
                             GuncellemeTarihi = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -142,11 +140,9 @@ namespace ApiProject.Api.Data.Migrations
 
             modelBuilder.Entity("ApiProject.Api.Entities.FirmaDomain", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Domain")
                         .IsRequired()
@@ -154,8 +150,8 @@ namespace ApiProject.Api.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(253)");
 
-                    b.Property<int>("FirmaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FirmaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("VarsayilanMi")
                         .HasColumnType("bit");
@@ -172,41 +168,39 @@ namespace ApiProject.Api.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("20000000-0000-0000-0000-000000000001"),
                             Domain = "abc.localhost",
-                            FirmaId = 1,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000001"),
                             VarsayilanMi = true
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("20000000-0000-0000-0000-000000000002"),
                             Domain = "abc.ornek.com",
-                            FirmaId = 1,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000001"),
                             VarsayilanMi = false
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("20000000-0000-0000-0000-000000000003"),
                             Domain = "xyz.localhost",
-                            FirmaId = 2,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000002"),
                             VarsayilanMi = true
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("20000000-0000-0000-0000-000000000004"),
                             Domain = "xyz.ornek.com",
-                            FirmaId = 2,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000002"),
                             VarsayilanMi = false
                         });
                 });
 
             modelBuilder.Entity("ApiProject.Api.Entities.Kullanici", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdSoyad")
                         .HasMaxLength(200)
@@ -220,8 +214,8 @@ namespace ApiProject.Api.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("FirmaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FirmaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("HataliGirisSayisi")
                         .HasColumnType("int");
@@ -260,11 +254,11 @@ namespace ApiProject.Api.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("30000000-0000-0000-0000-000000000001"),
                             AdSoyad = "ABC Yönetici",
                             AktifMi = true,
                             Email = "admin@abc.ornek.com",
-                            FirmaId = 1,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000001"),
                             HataliGirisSayisi = 0,
                             KullaniciAdi = "admin",
                             NormalizeKullaniciAdi = "ADMIN",
@@ -273,11 +267,11 @@ namespace ApiProject.Api.Data.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("30000000-0000-0000-0000-000000000002"),
                             AdSoyad = "XYZ Yönetici",
                             AktifMi = true,
                             Email = "admin@xyz.ornek.com",
-                            FirmaId = 2,
+                            FirmaId = new Guid("10000000-0000-0000-0000-000000000002"),
                             HataliGirisSayisi = 0,
                             KullaniciAdi = "admin",
                             NormalizeKullaniciAdi = "ADMIN",
