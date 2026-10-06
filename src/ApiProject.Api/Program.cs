@@ -25,6 +25,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<KullaniciService>();
 builder.Services.AddScoped<UrunService>();
 builder.Services.AddScoped<SepetService>();
+builder.Services.AddScoped<SiparisService>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddSingleton<IPasswordHasher<Kullanici>, PasswordHasher<Kullanici>>();
 
