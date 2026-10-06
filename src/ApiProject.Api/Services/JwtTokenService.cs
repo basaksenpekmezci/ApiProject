@@ -4,6 +4,7 @@ using System.Text;
 using ApiProject.Api.Entities;
 using ApiProject.Api.Options;
 using ApiProject.Api.Tenancy;
+using ApiProject.Api.Yetki;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,6 +29,7 @@ public class JwtTokenService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(FirmaClaimTipleri.FirmaId, kullanici.FirmaId.ToString()),
             new Claim(FirmaClaimTipleri.FirmaKodu, firmaKodu),
+            new Claim(YetkiTanimlari.YoneticiClaim, kullanici.YoneticiMi ? "true" : "false"),
         };
 
         var anahtar = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_opt.Key));

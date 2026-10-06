@@ -12,6 +12,7 @@ public class Kullanici : IFirmayaAit
     public string? Email { get; set; }
     public string? AdSoyad { get; set; }
     public bool AktifMi { get; set; } = true;
+    public bool YoneticiMi { get; set; }
     public int HataliGirisSayisi { get; set; }
     public DateTime? KilitBitisTarihi { get; set; }
     public DateTime? SonGirisTarihi { get; set; }

@@ -45,13 +45,13 @@ public static class SeedData
             {
                 Id = Guid.Parse("30000000-0000-0000-0000-000000000001"), FirmaId = AbcFirmaId, KullaniciAdi = "admin", NormalizeKullaniciAdi = "ADMIN",
                 SifreHash = "AQAAAAIAAYagAAAAEK7v3g7bOp36PP3Pt7XkS2ojtYQEV+xmJhHfv4IlNTvFfB/NvtBp/7YvrsT7oR7ZmA==",
-                Email = "admin@abc.ornek.com", AdSoyad = "ABC Yönetici", AktifMi = true, OlusturmaTarihi = Tarih
+                Email = "admin@abc.ornek.com", AdSoyad = "ABC Yönetici", AktifMi = true, YoneticiMi = true, OlusturmaTarihi = Tarih
             },
             new Kullanici
             {
                 Id = Guid.Parse("30000000-0000-0000-0000-000000000002"), FirmaId = XyzFirmaId, KullaniciAdi = "admin", NormalizeKullaniciAdi = "ADMIN",
                 SifreHash = "AQAAAAIAAYagAAAAEHmK/9vv7Kzqx3rpwssF1OXu0reqQ5Q7zWSuv1u86VH45HQ5xgEQh6RrkJKJ9gjVzg==",
-                Email = "admin@xyz.ornek.com", AdSoyad = "XYZ Yönetici", AktifMi = true, OlusturmaTarihi = Tarih
+                Email = "admin@xyz.ornek.com", AdSoyad = "XYZ Yönetici", AktifMi = true, YoneticiMi = true, OlusturmaTarihi = Tarih
             });
     }
 }
