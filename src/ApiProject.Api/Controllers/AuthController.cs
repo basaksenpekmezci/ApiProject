@@ -28,8 +28,7 @@ public class AuthController : ControllerBase
         return sonuc.Hata switch
         {
             LoginHata.Yok => Ok(sonuc.Yanit),
-            LoginHata.FirmaKoduGerekli => BadRequest(new { hata = "Bu domain bir firmaya bağlı değil, firmaKodu gönderilmeli." }),
-            LoginHata.FirmaKoduDomainleUyusmuyor => BadRequest(new { hata = "firmaKodu, isteğin geldiği domainin firmasıyla uyuşmuyor." }),
+            LoginHata.FirmaBelirlenemedi => BadRequest(new { hata = FirmaController.FirmaYokMesaji }),
             _ => Unauthorized(new { hata = "Kullanıcı adı veya şifre hatalı." })
         };
     }

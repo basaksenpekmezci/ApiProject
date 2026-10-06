@@ -4,6 +4,7 @@ using ApiProject.Api.Entities;
 using ApiProject.Api.Middleware;
 using ApiProject.Api.Options;
 using ApiProject.Api.Services;
+using ApiProject.Api.Swagger;
 using ApiProject.Api.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -60,6 +61,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiProject", Version = "v1" });
+    c.OperationFilter<XClientHeaderFilter>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.Http,

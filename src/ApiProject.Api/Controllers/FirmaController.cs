@@ -10,6 +10,8 @@ namespace ApiProject.Api.Controllers;
 [Route("api/firma")]
 public class FirmaController : ControllerBase
 {
+    public const string FirmaYokMesaji = "Firma belirlenemedi: Host bir firmaya ait değil ve X-Client header'ı gönderilmedi.";
+
     private readonly IFirmaBaglami _firmaBaglami;
     private readonly FirmaService _firmaService;
 
@@ -22,11 +24,12 @@ public class FirmaController : ControllerBase
     [HttpGet("config")]
     [AllowAnonymous]
     [ProducesResponseType<FirmaConfigDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Config(CancellationToken ct)
     {
         if (!_firmaBaglami.CozulduMu)
-            return NotFound(new { hata = $"'{Request.Host.Host}' domaini için firma bulunamadı." });
+            return BadRequest(new { hata = FirmaYokMesaji });
 
         var config = await _firmaService.ConfigGetirAsync(_firmaBaglami.FirmaId!.Value, ct);
         return config is null ? NotFound(new { hata = "Firma bulunamadı." }) : Ok(config);

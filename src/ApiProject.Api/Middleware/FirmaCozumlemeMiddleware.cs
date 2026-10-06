@@ -15,7 +15,28 @@ public class FirmaCozumlemeMiddleware
 
     public async Task InvokeAsync(HttpContext context, IFirmaBaglami firmaBaglami, FirmaService firmaService)
     {
-        var firma = await firmaService.DomaindenBulAsync(context.Request.Host.Host, context.RequestAborted);
+        var ct = context.RequestAborted;
+        var hostFirma = await firmaService.DomaindenBulAsync(context.Request.Host.Host, ct);
+
+        FirmaOzet? headerFirma = null;
+        var xClient = context.Request.Headers[FirmaHeaderlari.XClient].ToString().Trim();
+        if (xClient.Length > 0)
+        {
+            headerFirma = await firmaService.KoddanBulAsync(xClient, ct);
+            if (headerFirma is null)
+            {
+                await Yanitla(context, StatusCodes.Status400BadRequest, $"'{xClient}' kodlu firma bulunamadı.");
+                return;
+            }
+
+            if (hostFirma is not null && hostFirma.Id != headerFirma.Id)
+            {
+                await Yanitla(context, StatusCodes.Status400BadRequest, "Host ve X-Client farklı firmaları gösteriyor.");
+                return;
+            }
+        }
+
+        var firma = hostFirma ?? headerFirma;
         if (firma is not null)
             firmaBaglami.Ayarla(firma.Id, firma.FirmaKodu);
 
@@ -25,13 +46,13 @@ public class FirmaCozumlemeMiddleware
             var kodClaim = context.User.FindFirst(FirmaClaimTipleri.FirmaKodu)?.Value;
             if (!int.TryParse(idClaim, out var tokenFirmaId) || kodClaim is null)
             {
-                await Reddet(context, "Token firma bilgisi içermiyor.");
+                await Yanitla(context, StatusCodes.Status403Forbidden, "Token firma bilgisi içermiyor.");
                 return;
             }
 
             if (firmaBaglami.CozulduMu && firmaBaglami.FirmaId != tokenFirmaId)
             {
-                await Reddet(context, "Bu token bu domainin firmasına ait değil.");
+                await Yanitla(context, StatusCodes.Status403Forbidden, "Bu token bu firmaya ait değil.");
                 return;
             }
 
@@ -42,9 +63,9 @@ public class FirmaCozumlemeMiddleware
         await _next(context);
     }
 
-    private static Task Reddet(HttpContext context, string mesaj)
+    private static Task Yanitla(HttpContext context, int statusCode, string mesaj)
     {
-        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        context.Response.StatusCode = statusCode;
         return context.Response.WriteAsJsonAsync(new { hata = mesaj });
     }
 }

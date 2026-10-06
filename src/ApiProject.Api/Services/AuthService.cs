@@ -10,8 +10,7 @@ namespace ApiProject.Api.Services;
 public enum LoginHata
 {
     Yok,
-    FirmaKoduGerekli,
-    FirmaKoduDomainleUyusmuyor,
+    FirmaBelirlenemedi,
     GecersizBilgi
 }
 
@@ -24,40 +23,21 @@ public class AuthService
 
     private readonly AppDbContext _db;
     private readonly IFirmaBaglami _firmaBaglami;
-    private readonly FirmaService _firmaService;
     private readonly JwtTokenService _jwt;
     private readonly IPasswordHasher<Kullanici> _hasher;
 
-    public AuthService(AppDbContext db, IFirmaBaglami firmaBaglami, FirmaService firmaService,
-        JwtTokenService jwt, IPasswordHasher<Kullanici> hasher)
+    public AuthService(AppDbContext db, IFirmaBaglami firmaBaglami, JwtTokenService jwt, IPasswordHasher<Kullanici> hasher)
     {
         _db = db;
         _firmaBaglami = firmaBaglami;
-        _firmaService = firmaService;
         _jwt = jwt;
         _hasher = hasher;
     }
 
     public async Task<LoginSonuc> LoginAsync(LoginRequest istek, CancellationToken ct = default)
     {
-        var govdeKodu = string.IsNullOrWhiteSpace(istek.FirmaKodu) ? null : istek.FirmaKodu.Trim();
-
-        if (_firmaBaglami.CozulduMu)
-        {
-            if (govdeKodu is not null && !string.Equals(govdeKodu, _firmaBaglami.FirmaKodu, StringComparison.OrdinalIgnoreCase))
-                return new LoginSonuc(LoginHata.FirmaKoduDomainleUyusmuyor);
-        }
-        else
-        {
-            if (govdeKodu is null)
-                return new LoginSonuc(LoginHata.FirmaKoduGerekli);
-
-            var firma = await _firmaService.KoddanBulAsync(govdeKodu, ct);
-            if (firma is null)
-                return new LoginSonuc(LoginHata.GecersizBilgi);
-
-            _firmaBaglami.Ayarla(firma.Id, firma.FirmaKodu);
-        }
+        if (!_firmaBaglami.CozulduMu)
+            return new LoginSonuc(LoginHata.FirmaBelirlenemedi);
 
         // Global query filter sorguyu bu firmanın kullanıcılarıyla sınırlar.
         var normalize = istek.KullaniciAdi.Trim().ToUpperInvariant();
