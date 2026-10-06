@@ -4,6 +4,7 @@ using ApiProject.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiProject.Api.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261006114434_IlkKurulum")]
+    partial class IlkKurulum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +247,6 @@ namespace ApiProject.Api.Data.Migrations
                     b.Property<DateTime?>("SonGirisTarihi")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("YoneticiMi")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FirmaId", "NormalizeKullaniciAdi")
@@ -266,8 +266,7 @@ namespace ApiProject.Api.Data.Migrations
                             KullaniciAdi = "admin",
                             NormalizeKullaniciAdi = "ADMIN",
                             OlusturmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            SifreHash = "AQAAAAIAAYagAAAAEK7v3g7bOp36PP3Pt7XkS2ojtYQEV+xmJhHfv4IlNTvFfB/NvtBp/7YvrsT7oR7ZmA==",
-                            YoneticiMi = true
+                            SifreHash = "AQAAAAIAAYagAAAAEK7v3g7bOp36PP3Pt7XkS2ojtYQEV+xmJhHfv4IlNTvFfB/NvtBp/7YvrsT7oR7ZmA=="
                         },
                         new
                         {
@@ -280,162 +279,8 @@ namespace ApiProject.Api.Data.Migrations
                             KullaniciAdi = "admin",
                             NormalizeKullaniciAdi = "ADMIN",
                             OlusturmaTarihi = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            SifreHash = "AQAAAAIAAYagAAAAEHmK/9vv7Kzqx3rpwssF1OXu0reqQ5Q7zWSuv1u86VH45HQ5xgEQh6RrkJKJ9gjVzg==",
-                            YoneticiMi = true
+                            SifreHash = "AQAAAAIAAYagAAAAEHmK/9vv7Kzqx3rpwssF1OXu0reqQ5Q7zWSuv1u86VH45HQ5xgEQh6RrkJKJ9gjVzg=="
                         });
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.SepetKalemi", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Adet")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EklenmeTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("FirmaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("KullaniciId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UrunId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KullaniciId");
-
-                    b.HasIndex("UrunId");
-
-                    b.HasIndex("FirmaId", "KullaniciId", "UrunId")
-                        .IsUnique();
-
-                    b.ToTable("SepetKalemi", (string)null);
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.Siparis", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FirmaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("KullaniciId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("OlusturmaTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ToplamTutar")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KullaniciId");
-
-                    b.HasIndex("FirmaId", "KullaniciId");
-
-                    b.HasIndex("FirmaId", "OlusturmaTarihi");
-
-                    b.ToTable("Siparis", (string)null);
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.SiparisKalemi", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Adet")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("BirimFiyat")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("FirmaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SiparisId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UrunAdi")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<Guid>("UrunId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UrunKodu")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirmaId");
-
-                    b.HasIndex("SiparisId");
-
-                    b.HasIndex("UrunId");
-
-                    b.ToTable("SiparisKalemi", (string)null);
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.Urun", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Aciklama")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("AktifMi")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<Guid>("FirmaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Fiyat")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Kod")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("OlusturmaTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Stok")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirmaId", "Ad");
-
-                    b.HasIndex("FirmaId", "Kod")
-                        .IsUnique();
-
-                    b.ToTable("Urun", (string)null);
                 });
 
             modelBuilder.Entity("ApiProject.Api.Entities.FirmaAyar", b =>
@@ -471,94 +316,11 @@ namespace ApiProject.Api.Data.Migrations
                     b.Navigation("Firma");
                 });
 
-            modelBuilder.Entity("ApiProject.Api.Entities.SepetKalemi", b =>
-                {
-                    b.HasOne("ApiProject.Api.Entities.Firma", null)
-                        .WithMany()
-                        .HasForeignKey("FirmaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ApiProject.Api.Entities.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ApiProject.Api.Entities.Urun", "Urun")
-                        .WithMany()
-                        .HasForeignKey("UrunId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Kullanici");
-
-                    b.Navigation("Urun");
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.Siparis", b =>
-                {
-                    b.HasOne("ApiProject.Api.Entities.Firma", null)
-                        .WithMany()
-                        .HasForeignKey("FirmaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ApiProject.Api.Entities.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Kullanici");
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.SiparisKalemi", b =>
-                {
-                    b.HasOne("ApiProject.Api.Entities.Firma", null)
-                        .WithMany()
-                        .HasForeignKey("FirmaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ApiProject.Api.Entities.Siparis", "Siparis")
-                        .WithMany("Kalemler")
-                        .HasForeignKey("SiparisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ApiProject.Api.Entities.Urun", "Urun")
-                        .WithMany()
-                        .HasForeignKey("UrunId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Siparis");
-
-                    b.Navigation("Urun");
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.Urun", b =>
-                {
-                    b.HasOne("ApiProject.Api.Entities.Firma", "Firma")
-                        .WithMany()
-                        .HasForeignKey("FirmaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Firma");
-                });
-
             modelBuilder.Entity("ApiProject.Api.Entities.Firma", b =>
                 {
                     b.Navigation("Ayar");
 
                     b.Navigation("Domainler");
-                });
-
-            modelBuilder.Entity("ApiProject.Api.Entities.Siparis", b =>
-                {
-                    b.Navigation("Kalemler");
                 });
 #pragma warning restore 612, 618
         }

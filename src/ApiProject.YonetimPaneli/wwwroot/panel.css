@@ -1,0 +1,95 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f4f5f7;
+  color: #222;
+  margin: 0;
+  padding: 24px 16px;
+}
+.kart {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow-x: auto;
+}
+.giris {
+  max-width: 340px;
+  margin: 60px auto;
+}
+.giris h1 {
+  font-size: 22px;
+  margin-top: 0;
+}
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+}
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #1e88e5;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+button.ikincil {
+  background: #e0e0e0;
+  color: #222;
+}
+.hata {
+  color: #c62828;
+  min-height: 1em;
+}
+.ust {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto 16px;
+}
+.sekmeler,
+#panelHatasi,
+.sekme {
+  max-width: 1000px;
+  margin: 0 auto 12px;
+}
+.sekmeler button {
+  background: #e0e0e0;
+  color: #222;
+}
+.sekmeler button.aktif {
+  background: #1e88e5;
+  color: #fff;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th,
+td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+.sayi {
+  text-align: right;
+  white-space: nowrap;
+}
+.bos {
+  color: #888;
+  text-align: center;
+}

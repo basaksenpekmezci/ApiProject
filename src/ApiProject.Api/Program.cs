@@ -6,6 +6,7 @@ using ApiProject.Api.Options;
 using ApiProject.Api.Services;
 using ApiProject.Api.Swagger;
 using ApiProject.Api.Tenancy;
+using ApiProject.Api.Yetki;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,11 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<FirmaService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<KullaniciService>();
+builder.Services.AddScoped<UrunService>();
+builder.Services.AddScoped<SepetService>();
+builder.Services.AddScoped<SiparisService>();
+builder.Services.AddScoped<YonetimService>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddSingleton<IPasswordHasher<Kullanici>, PasswordHasher<Kullanici>>();
 
@@ -48,7 +54,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             NameClaimType = "unique_name"
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(o =>
+    o.AddPolicy(YetkiTanimlari.YoneticiPolitikasi, p => p.RequireClaim(YetkiTanimlari.YoneticiClaim, "true")));
 
 var izinliOriginler = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p

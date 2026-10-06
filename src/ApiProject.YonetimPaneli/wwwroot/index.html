@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yönetim Paneli</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <!-- Giriş ekranı -->
+  <section id="girisEkrani" class="kart giris">
+    <h1>Yönetim Paneli</h1>
+    <form id="girisFormu">
+      <label>Firma kodu
+        <input id="firmaKodu" required placeholder="ABC" autocomplete="organization">
+      </label>
+      <label>Kullanıcı adı
+        <input id="kullaniciAdi" required placeholder="admin" autocomplete="username">
+      </label>
+      <label>Şifre
+        <input id="sifre" type="password" required autocomplete="current-password">
+      </label>
+      <button type="submit">Giriş yap</button>
+      <p id="girisHatasi" class="hata"></p>
+    </form>
+  </section>
+
+  <!-- Panel ekranı -->
+  <section id="panelEkrani" hidden>
+    <header class="ust">
+      <div><strong id="firmaBasligi"></strong> · <span id="kullaniciBasligi"></span></div>
+      <button id="cikisButonu" class="ikincil">Çıkış</button>
+    </header>
+
+    <nav class="sekmeler">
+      <button data-sekme="siparisler" class="aktif">Siparişler</button>
+      <button data-sekme="kullanicilar">Kullanıcılar</button>
+    </nav>
+
+    <p id="panelHatasi" class="hata"></p>
+
+    <div id="siparisler" class="kart sekme">
+      <table>
+        <thead>
+          <tr><th>Tarih</th><th>Kullanıcı</th><th>Ürünler</th><th class="sayi">Toplam</th></tr>
+        </thead>
+        <tbody id="siparisTablosu"></tbody>
+      </table>
+    </div>
+
+    <div id="kullanicilar" class="kart sekme" hidden>
+      <table>
+        <thead>
+          <tr><th>Kullanıcı adı</th><th>Ad soyad</th><th>E-posta</th><th>Yönetici</th><th>Aktif</th><th>Kayıt tarihi</th></tr>
+        </thead>
+        <tbody id="kullaniciTablosu"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script src="panel.js"></script>
+</body>
+</html>

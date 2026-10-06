@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ApiProject.Api.Services;
 
-public record FirmaOzet(int Id, string FirmaKodu);
+public record FirmaOzet(Guid Id, string FirmaKodu);
 
 public class FirmaService
 {
@@ -49,7 +49,7 @@ public class FirmaService
             .FirstOrDefaultAsync(ct);
     }
 
-    public async Task<FirmaConfigDto?> ConfigGetirAsync(int firmaId, CancellationToken ct = default)
+    public async Task<FirmaConfigDto?> ConfigGetirAsync(Guid firmaId, CancellationToken ct = default)
     {
         var f = await _db.Firmalar
             .Where(x => x.Id == firmaId && x.AktifMi)

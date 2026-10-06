@@ -44,7 +44,7 @@ public class FirmaCozumlemeMiddleware
         {
             var idClaim = context.User.FindFirst(FirmaClaimTipleri.FirmaId)?.Value;
             var kodClaim = context.User.FindFirst(FirmaClaimTipleri.FirmaKodu)?.Value;
-            if (!int.TryParse(idClaim, out var tokenFirmaId) || kodClaim is null)
+            if (!Guid.TryParse(idClaim, out var tokenFirmaId) || kodClaim is null)
             {
                 await Yanitla(context, StatusCodes.Status403Forbidden, "Token firma bilgisi içermiyor.");
                 return;

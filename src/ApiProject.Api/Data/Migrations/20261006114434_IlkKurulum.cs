@@ -17,8 +17,7 @@ namespace ApiProject.Api.Data.Migrations
                 name: "Firma",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirmaKodu = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     FirmaAdi = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     AktifMi = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
@@ -33,7 +32,7 @@ namespace ApiProject.Api.Data.Migrations
                 name: "FirmaAyar",
                 columns: table => new
                 {
-                    FirmaId = table.Column<int>(type: "int", nullable: false),
+                    FirmaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LogoUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     TemaRengi = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
                     Dil = table.Column<string>(type: "varchar(10)", unicode: false, maxLength: 10, nullable: false, defaultValue: "tr-TR"),
@@ -57,9 +56,8 @@ namespace ApiProject.Api.Data.Migrations
                 name: "FirmaDomain",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirmaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirmaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Domain = table.Column<string>(type: "varchar(253)", unicode: false, maxLength: 253, nullable: false),
                     VarsayilanMi = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -78,9 +76,8 @@ namespace ApiProject.Api.Data.Migrations
                 name: "Kullanici",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirmaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirmaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     KullaniciAdi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NormalizeKullaniciAdi = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SifreHash = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -108,8 +105,8 @@ namespace ApiProject.Api.Data.Migrations
                 columns: new[] { "Id", "AktifMi", "FirmaAdi", "FirmaKodu", "OlusturmaTarihi" },
                 values: new object[,]
                 {
-                    { 1, true, "ABC Teknoloji", "ABC", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 2, true, "XYZ Lojistik", "XYZ", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
+                    { new Guid("10000000-0000-0000-0000-000000000001"), true, "ABC Teknoloji", "ABC", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { new Guid("10000000-0000-0000-0000-000000000002"), true, "XYZ Lojistik", "XYZ", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
@@ -117,8 +114,8 @@ namespace ApiProject.Api.Data.Migrations
                 columns: new[] { "FirmaId", "Dil", "EkAyarlarJson", "GuncellemeTarihi", "LogoUrl", "TemaRengi", "ZamanDilimi" },
                 values: new object[,]
                 {
-                    { 1, "tr-TR", "{\"destekTelefonu\":\"0212 000 00 00\",\"modulStok\":true}", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "https://abc.ornek.com/logo.png", "#1E88E5", "Europe/Istanbul" },
-                    { 2, "en-US", "{\"destekTelefonu\":\"+44 20 0000 0000\",\"modulStok\":false}", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "https://xyz.ornek.com/logo.png", "#43A047", "Europe/London" }
+                    { new Guid("10000000-0000-0000-0000-000000000001"), "tr-TR", "{\"destekTelefonu\":\"0212 000 00 00\",\"modulStok\":true}", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "https://abc.ornek.com/logo.png", "#1E88E5", "Europe/Istanbul" },
+                    { new Guid("10000000-0000-0000-0000-000000000002"), "en-US", "{\"destekTelefonu\":\"+44 20 0000 0000\",\"modulStok\":false}", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "https://xyz.ornek.com/logo.png", "#43A047", "Europe/London" }
                 });
 
             migrationBuilder.InsertData(
@@ -126,10 +123,10 @@ namespace ApiProject.Api.Data.Migrations
                 columns: new[] { "Id", "Domain", "FirmaId", "VarsayilanMi" },
                 values: new object[,]
                 {
-                    { 1, "abc.localhost", 1, true },
-                    { 2, "abc.ornek.com", 1, false },
-                    { 3, "xyz.localhost", 2, true },
-                    { 4, "xyz.ornek.com", 2, false }
+                    { new Guid("20000000-0000-0000-0000-000000000001"), "abc.localhost", new Guid("10000000-0000-0000-0000-000000000001"), true },
+                    { new Guid("20000000-0000-0000-0000-000000000002"), "abc.ornek.com", new Guid("10000000-0000-0000-0000-000000000001"), false },
+                    { new Guid("20000000-0000-0000-0000-000000000003"), "xyz.localhost", new Guid("10000000-0000-0000-0000-000000000002"), true },
+                    { new Guid("20000000-0000-0000-0000-000000000004"), "xyz.ornek.com", new Guid("10000000-0000-0000-0000-000000000002"), false }
                 });
 
             migrationBuilder.InsertData(
@@ -137,8 +134,8 @@ namespace ApiProject.Api.Data.Migrations
                 columns: new[] { "Id", "AdSoyad", "AktifMi", "Email", "FirmaId", "HataliGirisSayisi", "KilitBitisTarihi", "KullaniciAdi", "NormalizeKullaniciAdi", "OlusturmaTarihi", "SifreHash", "SonGirisTarihi" },
                 values: new object[,]
                 {
-                    { 1, "ABC Yönetici", true, "admin@abc.ornek.com", 1, 0, null, "admin", "ADMIN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "AQAAAAIAAYagAAAAEK7v3g7bOp36PP3Pt7XkS2ojtYQEV+xmJhHfv4IlNTvFfB/NvtBp/7YvrsT7oR7ZmA==", null },
-                    { 2, "XYZ Yönetici", true, "admin@xyz.ornek.com", 2, 0, null, "admin", "ADMIN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "AQAAAAIAAYagAAAAEHmK/9vv7Kzqx3rpwssF1OXu0reqQ5Q7zWSuv1u86VH45HQ5xgEQh6RrkJKJ9gjVzg==", null }
+                    { new Guid("30000000-0000-0000-0000-000000000001"), "ABC Yönetici", true, "admin@abc.ornek.com", new Guid("10000000-0000-0000-0000-000000000001"), 0, null, "admin", "ADMIN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "AQAAAAIAAYagAAAAEK7v3g7bOp36PP3Pt7XkS2ojtYQEV+xmJhHfv4IlNTvFfB/NvtBp/7YvrsT7oR7ZmA==", null },
+                    { new Guid("30000000-0000-0000-0000-000000000002"), "XYZ Yönetici", true, "admin@xyz.ornek.com", new Guid("10000000-0000-0000-0000-000000000002"), 0, null, "admin", "ADMIN", new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "AQAAAAIAAYagAAAAEHmK/9vv7Kzqx3rpwssF1OXu0reqQ5Q7zWSuv1u86VH45HQ5xgEQh6RrkJKJ9gjVzg==", null }
                 });
 
             migrationBuilder.CreateIndex(
