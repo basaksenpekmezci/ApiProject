@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Yerel geliştirme ayarları (gizli bilgiler)
+appsettings.Development.json
