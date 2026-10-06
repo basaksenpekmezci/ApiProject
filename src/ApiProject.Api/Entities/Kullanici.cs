@@ -1,6 +1,8 @@
+using ApiProject.Api.Tenancy;
+
 namespace ApiProject.Api.Entities;
 
-public class Kullanici
+public class Kullanici : IFirmayaAit
 {
     public Guid Id { get; set; }
     public Guid FirmaId { get; set; }
