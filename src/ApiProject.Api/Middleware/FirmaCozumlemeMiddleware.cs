@@ -3,12 +3,7 @@ using ApiProject.Api.Tenancy;
 
 namespace ApiProject.Api.Middleware;
 
-/// <summary>
-/// UseAuthentication'dan sonra çalışır.
-/// 1. İsteğin Host'undan firmayı bulup IFirmaBaglami'na yazar.
-/// 2. Token varsa, token'ın firması domainin firmasıyla aynı olmalı; değilse 403.
-///    Domainden firma çıkmadıysa (ör. localhost) firma token'dan alınır.
-/// </summary>
+// UseAuthentication'dan sonra çalışmalı: token'daki firma ile isteğin firması karşılaştırılıyor.
 public class FirmaCozumlemeMiddleware
 {
     private readonly RequestDelegate _next;

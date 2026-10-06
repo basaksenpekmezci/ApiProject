@@ -17,9 +17,6 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    /// <summary>
-    /// Firma önce isteğin domaininden bulunur. Bulunamazsa body'deki firmaKodu kullanılır.
-    /// </summary>
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType<LoginResponse>(StatusCodes.Status200OK)]
@@ -37,7 +34,6 @@ public class AuthController : ControllerBase
         };
     }
 
-    /// <summary>Token'ı test etmek için: giriş yapan kullanıcının ve firmanın bilgisini döner.</summary>
     [HttpGet("ben")]
     [Authorize]
     public IActionResult Ben([FromServices] IFirmaBaglami firmaBaglami)

@@ -19,14 +19,13 @@ public class AppDbContext : DbContext
     public DbSet<FirmaAyar> FirmaAyarlari => Set<FirmaAyar>();
     public DbSet<Kullanici> Kullanicilar => Set<Kullanici>();
 
-    // Global query filter bu property'yi her sorguda yeniden okur.
     private int? AktifFirmaId => _firmaBaglami.FirmaId;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-        // Firmaya ait tablolar: firma çözülmemişse hiçbir satır dönmez.
+        // Firma belirlenmemişse hiçbir kullanıcı dönmez.
         modelBuilder.Entity<Kullanici>().HasQueryFilter(k => k.FirmaId == AktifFirmaId);
 
         if (Database.IsSqlServer())

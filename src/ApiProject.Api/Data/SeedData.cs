@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiProject.Api.Data;
 
-/// <summary>
-/// Test için örnek veri. İki firmada da "admin" kullanıcısı var, şifreleri farklı:
-///   ABC / admin / Abc123!
-///   XYZ / admin / Xyz123!
-/// </summary>
 public static class SeedData
 {
     private static readonly DateTime Tarih = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -40,7 +35,7 @@ public static class SeedData
                 GuncellemeTarihi = Tarih
             });
 
-        // Hash'ler PasswordHasher<Kullanici> ile üretildi (seed sabit olmalı, o yüzden önceden hesaplandı).
+        // HasData sabit değer istediği için hash'ler önceden PasswordHasher ile üretildi.
         modelBuilder.Entity<Kullanici>().HasData(
             new Kullanici
             {

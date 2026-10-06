@@ -2,7 +2,7 @@ namespace ApiProject.Api.Tenancy;
 
 public static class DomainYardimci
 {
-    /// <summary>"WWW.Abc.Ornek.com." gibi bir host'u "abc.ornek.com" biçimine getirir. Port zaten içermez.</summary>
+    // "WWW.Abc.Ornek.com." -> "abc.ornek.com"
     public static string Normalize(string host)
     {
         var d = host.Trim().TrimEnd('.').ToLowerInvariant();

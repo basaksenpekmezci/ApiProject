@@ -13,19 +13,16 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı ve firma bağlamı
 builder.Services.AddScoped<IFirmaBaglami, FirmaBaglami>();
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddMemoryCache();
 
-// Servisler
 builder.Services.AddScoped<FirmaService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddSingleton<IPasswordHasher<Kullanici>, PasswordHasher<Kullanici>>();
 
-// JWT
 var jwtBolum = builder.Configuration.GetSection(JwtOptions.Bolum);
 builder.Services.AddOptions<JwtOptions>()
     .Bind(jwtBolum)
@@ -36,7 +33,7 @@ var jwt = jwtBolum.Get<JwtOptions>()!;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
-        o.MapInboundClaims = false; // "sub", "firma_id" gibi claim adları olduğu gibi kalsın
+        o.MapInboundClaims = false; // claim adları (sub, firma_id) dönüştürülmesin
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -61,8 +58,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
-        BearerFormat = "JWT",
-        Description = "Login'den dönen token'ı yapıştırın (başına 'Bearer' yazmadan)."
+        BearerFormat = "JWT"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -77,7 +73,6 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Geliştirmede veritabanını otomatik oluştur / güncelle (seed data dahil).
     using var scope = app.Services.CreateScope();
     scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 

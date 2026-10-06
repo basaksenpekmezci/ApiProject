@@ -4,7 +4,7 @@ public class FirmaDomain
 {
     public int Id { get; set; }
     public int FirmaId { get; set; }
-    /// <summary>Küçük harf, port ve "www." olmadan saklanır.</summary>
+    // küçük harf, port ve "www." olmadan
     public string Domain { get; set; } = null!;
     public bool VarsayilanMi { get; set; }
 

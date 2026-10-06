@@ -23,7 +23,7 @@ public class FirmaService
         _cache = cache;
     }
 
-    /// <summary>Host'a göre aktif firmayı bulur. Sonuç (bulunamadı dahil) kısa süre cache'lenir.</summary>
+    // Bulunamayan domainler de kısa süreliğine cache'lenir.
     public async Task<FirmaOzet?> DomaindenBulAsync(string host, CancellationToken ct = default)
     {
         var domain = DomainYardimci.Normalize(host);

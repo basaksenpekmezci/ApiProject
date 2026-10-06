@@ -19,7 +19,6 @@ public class FirmaController : ControllerBase
         _firmaService = firmaService;
     }
 
-    /// <summary>İsteğin geldiği domaine göre firmanın config bilgilerini döner.</summary>
     [HttpGet("config")]
     [AllowAnonymous]
     [ProducesResponseType<FirmaConfigDto>(StatusCodes.Status200OK)]

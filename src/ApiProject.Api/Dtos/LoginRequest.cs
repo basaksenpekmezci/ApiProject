@@ -4,7 +4,6 @@ namespace ApiProject.Api.Dtos;
 
 public class LoginRequest
 {
-    /// <summary>İsteğin domaininden firma bulunamazsa (ör. localhost) zorunlu.</summary>
     [MaxLength(50)]
     public string? FirmaKodu { get; set; }
 

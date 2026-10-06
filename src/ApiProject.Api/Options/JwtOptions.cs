@@ -6,7 +6,7 @@ public class JwtOptions
 
     public string Issuer { get; set; } = null!;
     public string Audience { get; set; } = null!;
-    /// <summary>HMAC-SHA256 anahtarı, en az 32 karakter.</summary>
+    // HMAC-SHA256, en az 32 karakter
     public string Key { get; set; } = null!;
     public int SureDakika { get; set; } = 60;
 }

@@ -1,6 +1,5 @@
 namespace ApiProject.Api.Tenancy;
 
-/// <summary>O anki isteğin hangi firmaya ait olduğu. İstek başına (scoped) tek örnek.</summary>
 public interface IFirmaBaglami
 {
     int? FirmaId { get; }

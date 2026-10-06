@@ -44,7 +44,6 @@ public class AuthService
 
         if (_firmaBaglami.CozulduMu)
         {
-            // Firma domainden bulundu; body'de farklı bir firma kodu gelirse reddet.
             if (govdeKodu is not null && !string.Equals(govdeKodu, _firmaBaglami.FirmaKodu, StringComparison.OrdinalIgnoreCase))
                 return new LoginSonuc(LoginHata.FirmaKoduDomainleUyusmuyor);
         }
@@ -60,7 +59,7 @@ public class AuthService
             _firmaBaglami.Ayarla(firma.Id, firma.FirmaKodu);
         }
 
-        // Global query filter kullanıcıyı otomatik olarak bu firmayla sınırlar.
+        // Global query filter sorguyu bu firmanın kullanıcılarıyla sınırlar.
         var normalize = istek.KullaniciAdi.Trim().ToUpperInvariant();
         var kullanici = await _db.Kullanicilar.FirstOrDefaultAsync(k => k.NormalizeKullaniciAdi == normalize, ct);
         if (kullanici is null || !kullanici.AktifMi)
