@@ -39,14 +39,9 @@ src/
 7. Her sorguda firma filtresi olsun; bir firma başka firmanın ürününü, sepetini, siparişini, kullanıcısını göremesin.
 
 **8. gün**
-1. docker-compose ile Elasticsearch 8 (tek node, security kapalı) ve Redis.
-2. Bağlantı adresleri appsettings'ten okunsun (`Elasticsearch:Url`, `Redis:Url`).
-3. `urunler` index'i; her aramada FirmaId filtresi zorunlu.
-4. Ürün ekleme ve güncelleme SQL'den sonra Elasticsearch'e de yazsın.
-5. Arama önce Redis'e (15 dakika), sonra Elasticsearch'e baksın; Elasticsearch çalışmıyorsa SQL'e düşsün. Kelimenin bir kısmı yazılınca da bulsun.
-6. Cevapta sonuçlar, toplam kayıt, süre (ms) ve kaynak (`redis`, `elasticsearch`, `sql`).
-7. Yöneticiye özel seed endpoint'i: firmaya 1 milyona kadar deneme ürünü, SQL'e ve Elasticsearch'e bulk ile.
-8. Yönetim panelinde ürün arama sayfası.
+1. Ürün aramayı Elasticsearch'e çevirmek; arama Elasticsearch ve SQL ile bağlantılı çalışsın.
+2. Yaklaşık 1 milyon deneme kaydı ekleyip aramanın kaç kayıt getirdiğini ve ne kadar sürdüğünü göstermek.
+3. Redis eklemek: daha önce yapılan arama Redis'ten, ilk kez yapılan arama Elasticsearch'ten gelsin (15 dakika).
 
 ## Nasıl çözdüm
 **Firma belirleme ve giriş**
