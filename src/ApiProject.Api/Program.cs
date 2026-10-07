@@ -31,6 +31,7 @@ builder.Services.AddScoped<UrunService>();
 builder.Services.AddScoped<SepetService>();
 builder.Services.AddScoped<SiparisService>();
 builder.Services.AddScoped<YonetimService>();
+builder.Services.AddScoped<UrunSeedService>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddSingleton<IPasswordHasher<Kullanici>, PasswordHasher<Kullanici>>();
 

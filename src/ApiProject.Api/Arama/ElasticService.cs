@@ -126,6 +126,21 @@ public class ElasticService
         }
     }
 
+    // Toplu yüklemede her batch'ten sonra index yenilenmez, yükleme bitince bir kez yenilenir.
+    public async Task YenilemeyiAyarlaAsync(bool acik, CancellationToken ct = default)
+    {
+        await IndeksHazirlaAsync(ct);
+
+        var ayar = acik ? "\"1s\"" : "\"-1\"";
+        var cevap = await _client.Transport.PutAsync<StringResponse>($"{IndeksAdi}/_settings",
+            PostData.String($$"""{ "index": { "refresh_interval": {{ayar}} } }"""), null, ct);
+        if (!cevap.ApiCallDetails.HasSuccessfulStatusCode)
+            throw new ElasticHatasi($"Index ayarı değiştirilemedi: {cevap.ApiCallDetails.HttpStatusCode} {cevap.Body}");
+
+        if (acik)
+            await _client.Indices.RefreshAsync(IndeksAdi, ct);
+    }
+
     public async Task<(List<UrunDto> Urunler, long Toplam)> AraAsync(string? arama, bool sadeceAktif, int limit, CancellationToken ct = default)
     {
         await IndeksHazirlaAsync(ct);
