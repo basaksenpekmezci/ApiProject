@@ -1,4 +1,5 @@
 using System.Text;
+using ApiProject.Api.Arama;
 using ApiProject.Api.Data;
 using ApiProject.Api.Entities;
 using ApiProject.Api.Middleware;
@@ -7,6 +8,9 @@ using ApiProject.Api.Services;
 using ApiProject.Api.Swagger;
 using ApiProject.Api.Tenancy;
 using ApiProject.Api.Yetki;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Serialization;
+using Elastic.Transport;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +43,14 @@ var jwt = jwtBolum.Get<JwtOptions>()!;
 
 builder.Services.Configure<ElasticsearchOptions>(builder.Configuration.GetSection(ElasticsearchOptions.Bolum));
 builder.Services.Configure<RedisOptions>(builder.Configuration.GetSection(RedisOptions.Bolum));
+
+var elasticAyar = builder.Configuration.GetSection(ElasticsearchOptions.Bolum).Get<ElasticsearchOptions>() ?? new();
+builder.Services.AddSingleton(new ElasticsearchClient(
+    new ElasticsearchClientSettings(new SingleNodePool(new Uri(elasticAyar.Url)),
+            (_, ayar) => new DefaultSourceSerializer(ayar, o => o.PropertyNamingPolicy = null))
+        .DefaultFieldNameInferrer(ad => ad)
+        .RequestTimeout(TimeSpan.FromSeconds(60))));
+builder.Services.AddScoped<ElasticService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
@@ -93,6 +105,15 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+
+    try
+    {
+        await scope.ServiceProvider.GetRequiredService<ElasticService>().IndeksHazirlaAsync();
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning("Elasticsearch index'i hazırlanamadı, arama SQL'den yapılacak: {Hata}", ex.Message);
+    }
 
     app.UseSwagger();
     app.UseSwaggerUI();
