@@ -35,6 +35,7 @@
     <nav class="sekmeler">
       <button data-sekme="siparisler" class="aktif">Siparişler</button>
       <button data-sekme="kullanicilar">Kullanıcılar</button>
+      <button data-sekme="urunArama">Ürün arama</button>
     </nav>
 
     <p id="panelHatasi" class="hata"></p>
@@ -54,6 +55,23 @@
           <tr><th>Kullanıcı adı</th><th>Ad soyad</th><th>E-posta</th><th>Yönetici</th><th>Aktif</th><th>Kayıt tarihi</th></tr>
         </thead>
         <tbody id="kullaniciTablosu"></tbody>
+      </table>
+    </div>
+
+    <div id="urunArama" class="kart sekme" hidden>
+      <form id="aramaFormu" class="arama">
+        <input id="aramaMetni" placeholder="Ürün adı veya kodu (ör. kalem, KLM-1)" autocomplete="off">
+        <button type="submit">Ara</button>
+      </form>
+      <p id="aramaBilgisi" class="arama-bilgisi" hidden>
+        <span id="aramaToplam"></span> kayıt<span id="aramaGosterilen"></span> · <span id="aramaSure"></span> ms · kaynak:
+        <span id="aramaKaynak" class="etiket"></span>
+      </p>
+      <table>
+        <thead>
+          <tr><th>Kod</th><th>Ad</th><th class="sayi">Fiyat</th><th class="sayi">Stok</th><th>Aktif</th></tr>
+        </thead>
+        <tbody id="urunTablosu"></tbody>
       </table>
     </div>
   </section>
