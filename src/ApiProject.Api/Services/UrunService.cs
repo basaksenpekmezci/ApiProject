@@ -31,7 +31,22 @@ public class UrunService
         _logger = logger;
     }
 
+    // Arama önce Elasticsearch'te yapılır; Elasticsearch'e ulaşılamazsa SQL'deki aramaya düşülür.
     public async Task<List<UrunDto>> AraAsync(string? arama, bool sadeceAktif, CancellationToken ct = default)
+    {
+        try
+        {
+            var (urunler, _) = await _elastic.AraAsync(arama, sadeceAktif, AramaLimiti, ct);
+            return urunler;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogWarning("Elasticsearch'te arama yapılamadı, SQL'e düşülüyor: {Hata}", ex.Message);
+            return await SqlAraAsync(arama, sadeceAktif, ct);
+        }
+    }
+
+    private async Task<List<UrunDto>> SqlAraAsync(string? arama, bool sadeceAktif, CancellationToken ct)
     {
         var sorgu = _db.Urunler.AsNoTracking();
 
