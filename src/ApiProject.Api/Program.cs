@@ -37,6 +37,9 @@ builder.Services.AddOptions<JwtOptions>()
     .ValidateOnStart();
 var jwt = jwtBolum.Get<JwtOptions>()!;
 
+builder.Services.Configure<ElasticsearchOptions>(builder.Configuration.GetSection(ElasticsearchOptions.Bolum));
+builder.Services.Configure<RedisOptions>(builder.Configuration.GetSection(RedisOptions.Bolum));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
