@@ -93,3 +93,34 @@ td {
   color: #888;
   text-align: center;
 }
+.arama {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.arama input {
+  margin-top: 0;
+}
+.arama-bilgisi {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 12px;
+}
+.etiket {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: #757575;
+}
+.etiket.redis {
+  background: #d32f2f;
+}
+.etiket.elasticsearch {
+  background: #00897b;
+}
+.etiket.sql {
+  background: #5e35b1;
+}

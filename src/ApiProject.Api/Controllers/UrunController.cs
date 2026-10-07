@@ -22,7 +22,7 @@ public class UrunController : ControllerBase
 
     // Örnek: GET /api/urunler?arama=kalem  (pasifleri de görmek için &sadeceAktif=false)
     [HttpGet]
-    [ProducesResponseType<List<UrunDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UrunAramaSonucu>(StatusCodes.Status200OK)]
     public async Task<IActionResult> Ara([FromQuery] string? arama, [FromQuery] bool sadeceAktif = true, CancellationToken ct = default)
     {
         return Ok(await _urunService.AraAsync(arama, sadeceAktif, ct));

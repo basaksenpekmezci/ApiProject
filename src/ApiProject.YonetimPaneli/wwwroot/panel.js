@@ -104,12 +104,12 @@ document.querySelectorAll(".sekmeler button").forEach((buton) => {
 
 function sekmeyiAc(sekme) {
   document.querySelectorAll(".sekmeler button").forEach((b) => b.classList.toggle("aktif", b.dataset.sekme === sekme));
-  document.getElementById("siparisler").hidden = sekme !== "siparisler";
-  document.getElementById("kullanicilar").hidden = sekme !== "kullanicilar";
+  document.querySelectorAll(".sekme").forEach((s) => (s.hidden = s.id !== sekme));
   document.getElementById("panelHatasi").textContent = "";
 
   if (sekme === "siparisler") siparisleriYukle();
-  else kullanicilariYukle();
+  else if (sekme === "kullanicilar") kullanicilariYukle();
+  else document.getElementById("aramaMetni").focus();
 }
 
 // ---------- Siparişler ----------
@@ -167,6 +167,41 @@ async function kullanicilariYukle() {
     hataGoster(hata);
   }
 }
+
+// ---------- Ürün arama ----------
+
+document.getElementById("aramaFormu").addEventListener("submit", async (olay) => {
+  olay.preventDefault();
+  const metin = document.getElementById("aramaMetni").value.trim();
+  const tablo = document.getElementById("urunTablosu");
+  document.getElementById("panelHatasi").textContent = "";
+
+  try {
+    const sonuc = await apiIstegi("/api/urunler?sadeceAktif=false&arama=" + encodeURIComponent(metin));
+
+    document.getElementById("aramaToplam").textContent = sonuc.toplamKayit.toLocaleString("tr-TR");
+    document.getElementById("aramaGosterilen").textContent =
+      sonuc.toplamKayit > sonuc.sonuclar.length ? " (ilk " + sonuc.sonuclar.length + " gösteriliyor)" : "";
+    document.getElementById("aramaSure").textContent = sonuc.sureMs;
+    const kaynak = document.getElementById("aramaKaynak");
+    kaynak.textContent = sonuc.kaynak;
+    kaynak.className = "etiket " + sonuc.kaynak;
+    document.getElementById("aramaBilgisi").hidden = false;
+
+    tablo.innerHTML = "";
+    if (sonuc.sonuclar.length === 0) {
+      tablo.innerHTML = '<tr><td colspan="5" class="bos">Ürün bulunamadı.</td></tr>';
+      return;
+    }
+    for (const u of sonuc.sonuclar) {
+      const stok = yazi(u.stok.toLocaleString("tr-TR"));
+      stok.className = "sayi";
+      tablo.appendChild(satir([yazi(u.kod), yazi(u.ad), para(u.fiyat), stok, yazi(u.aktifMi ? "Evet" : "Hayır")]));
+    }
+  } catch (hata) {
+    hataGoster(hata);
+  }
+});
 
 // ---------- Yardımcılar ----------
 

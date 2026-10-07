@@ -93,6 +93,14 @@ Authorization: Bearer {{loginAyse.response.body.$.token}}
 GET {{base}}/api/urunler?arama=Kalem
 Authorization: Bearer {{loginXyz.response.body.$.token}}
 
+### Ürün ara: kelimenin bir kısmı ("ale" -> Kalem), cevapta toplamKayit, sureMs ve kaynak var
+GET {{base}}/api/urunler?arama=ale
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+
+### Deneme ürünü yükle: ABC'ye 10 bin (adet en fazla 1000000)
+POST {{base}}/api/yonetim/urunler/seed?adet=10000
+Authorization: Bearer {{loginAbc.response.body.$.token}}
+
 ### Sepete ekle: ayse, 3 kalem
 POST {{base}}/api/sepet/urunler
 Authorization: Bearer {{loginAyse.response.body.$.token}}
