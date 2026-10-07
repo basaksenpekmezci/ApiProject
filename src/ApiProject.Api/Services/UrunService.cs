@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using ApiProject.Api.Arama;
 using ApiProject.Api.Data;
 using ApiProject.Api.Dtos;
@@ -32,21 +33,29 @@ public class UrunService
     }
 
     // Arama önce Elasticsearch'te yapılır; Elasticsearch'e ulaşılamazsa SQL'deki aramaya düşülür.
-    public async Task<List<UrunDto>> AraAsync(string? arama, bool sadeceAktif, CancellationToken ct = default)
+    public async Task<UrunAramaSonucu> AraAsync(string? arama, bool sadeceAktif, CancellationToken ct = default)
     {
+        var sure = Stopwatch.StartNew();
+        List<UrunDto> urunler;
+        long toplam;
+        string kaynak;
+
         try
         {
-            var (urunler, _) = await _elastic.AraAsync(arama, sadeceAktif, AramaLimiti, ct);
-            return urunler;
+            (urunler, toplam) = await _elastic.AraAsync(arama, sadeceAktif, AramaLimiti, ct);
+            kaynak = AramaKaynagi.Elasticsearch;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             _logger.LogWarning("Elasticsearch'te arama yapılamadı, SQL'e düşülüyor: {Hata}", ex.Message);
-            return await SqlAraAsync(arama, sadeceAktif, ct);
+            (urunler, toplam) = await SqlAraAsync(arama, sadeceAktif, ct);
+            kaynak = AramaKaynagi.Sql;
         }
+
+        return new UrunAramaSonucu(urunler, toplam, sure.ElapsedMilliseconds, kaynak);
     }
 
-    private async Task<List<UrunDto>> SqlAraAsync(string? arama, bool sadeceAktif, CancellationToken ct)
+    private async Task<(List<UrunDto> Urunler, long Toplam)> SqlAraAsync(string? arama, bool sadeceAktif, CancellationToken ct)
     {
         var sorgu = _db.Urunler.AsNoTracking();
 
@@ -59,11 +68,13 @@ public class UrunService
             sorgu = sorgu.Where(u => u.Ad.Contains(metin) || u.Kod.Contains(metin));
         }
 
-        return await sorgu
+        var toplam = await sorgu.LongCountAsync(ct);
+        var urunler = await sorgu
             .OrderBy(u => u.Ad)
             .Take(AramaLimiti)
             .Select(u => new UrunDto(u.Id, u.Kod, u.Ad, u.Aciklama, u.Fiyat, u.Stok, u.AktifMi))
             .ToListAsync(ct);
+        return (urunler, toplam);
     }
 
     public async Task<UrunSonuc> EkleAsync(UrunKaydetRequest istek, CancellationToken ct = default)
