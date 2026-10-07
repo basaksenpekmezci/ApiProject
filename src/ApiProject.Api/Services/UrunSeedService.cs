@@ -25,13 +25,15 @@ public class UrunSeedService
 
     private readonly AppDbContext _db;
     private readonly ElasticService _elastic;
+    private readonly AramaOnbellegi _onbellek;
     private readonly IFirmaBaglami _firmaBaglami;
     private readonly ILogger<UrunSeedService> _logger;
 
-    public UrunSeedService(AppDbContext db, ElasticService elastic, IFirmaBaglami firmaBaglami, ILogger<UrunSeedService> logger)
+    public UrunSeedService(AppDbContext db, ElasticService elastic, AramaOnbellegi onbellek, IFirmaBaglami firmaBaglami, ILogger<UrunSeedService> logger)
     {
         _db = db;
         _elastic = elastic;
+        _onbellek = onbellek;
         _firmaBaglami = firmaBaglami;
         _logger = logger;
     }
@@ -105,6 +107,8 @@ public class UrunSeedService
         }
         finally
         {
+            await _onbellek.FirmayiTemizleAsync();
+
             try
             {
                 await _elastic.YenilemeyiAyarlaAsync(acik: true, CancellationToken.None);

@@ -23,19 +23,27 @@ public class UrunService
 
     private readonly AppDbContext _db;
     private readonly ElasticService _elastic;
+    private readonly AramaOnbellegi _onbellek;
     private readonly ILogger<UrunService> _logger;
 
-    public UrunService(AppDbContext db, ElasticService elastic, ILogger<UrunService> logger)
+    public UrunService(AppDbContext db, ElasticService elastic, AramaOnbellegi onbellek, ILogger<UrunService> logger)
     {
         _db = db;
         _elastic = elastic;
+        _onbellek = onbellek;
         _logger = logger;
     }
 
-    // Arama önce Elasticsearch'te yapılır; Elasticsearch'e ulaşılamazsa SQL'deki aramaya düşülür.
+    // Arama sırası: Redis, Elasticsearch, SQL. Elasticsearch sonucu Redis'e yazılır.
+    // Elasticsearch'e ulaşılamazsa SQL'deki aramaya düşülür; SQL sonucu önbelleğe yazılmaz.
     public async Task<UrunAramaSonucu> AraAsync(string? arama, bool sadeceAktif, CancellationToken ct = default)
     {
         var sure = Stopwatch.StartNew();
+
+        var onbellekte = await _onbellek.OkuAsync(arama, sadeceAktif);
+        if (onbellekte is not null)
+            return new UrunAramaSonucu(onbellekte.Sonuclar, onbellekte.ToplamKayit, sure.ElapsedMilliseconds, AramaKaynagi.Redis);
+
         List<UrunDto> urunler;
         long toplam;
         string kaynak;
@@ -44,6 +52,7 @@ public class UrunService
         {
             (urunler, toplam) = await _elastic.AraAsync(arama, sadeceAktif, AramaLimiti, ct);
             kaynak = AramaKaynagi.Elasticsearch;
+            await _onbellek.YazAsync(arama, sadeceAktif, new OnbellektekiArama(urunler, toplam));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -124,6 +133,8 @@ public class UrunService
             // Aynı anda aynı kodla gelen iki istekte unique index ikincisini durdurur.
             return new UrunSonuc(UrunHata.KodAlinmis);
         }
+
+        await _onbellek.FirmayiTemizleAsync();
 
         // SQL asıl kayıt yeri; Elasticsearch'e yazılamazsa ürün yine kaydedilmiş sayılır.
         try

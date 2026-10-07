@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,15 @@ builder.Services.AddSingleton(new ElasticsearchClient(
         .DefaultFieldNameInferrer(ad => ad)
         .RequestTimeout(TimeSpan.FromSeconds(60))));
 builder.Services.AddScoped<ElasticService>();
+
+var redisAyar = builder.Configuration.GetSection(RedisOptions.Bolum).Get<RedisOptions>() ?? new();
+var redisBaglanti = ConfigurationOptions.Parse(redisAyar.Url);
+redisBaglanti.AbortOnConnectFail = false;
+redisBaglanti.ConnectTimeout = 2000;
+redisBaglanti.SyncTimeout = 2000;
+redisBaglanti.AsyncTimeout = 2000;
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisBaglanti));
+builder.Services.AddScoped<AramaOnbellegi>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
