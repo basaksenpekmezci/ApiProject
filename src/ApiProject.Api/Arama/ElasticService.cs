@@ -92,12 +92,13 @@ public class ElasticService
         _indeksHazir = true;
     }
 
+    // Kayıt aramada hemen görünsün diye index yenilenene kadar beklenir.
     public async Task KaydetAsync(Urun urun, CancellationToken ct = default)
     {
         var dokuman = DokumanYap(urun);
         await IndeksHazirlaAsync(ct);
 
-        var cevap = await _client.IndexAsync(dokuman, i => i.Index(IndeksAdi).Id(dokuman.Id.ToString()), ct);
+        var cevap = await _client.IndexAsync(dokuman, i => i.Index(IndeksAdi).Id(dokuman.Id.ToString()).Refresh(Refresh.WaitFor), ct);
         if (!cevap.IsValidResponse)
             throw Hata("Ürün index'e yazılamadı", cevap);
     }

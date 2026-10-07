@@ -1,3 +1,4 @@
+using ApiProject.Api.Arama;
 using ApiProject.Api.Data;
 using ApiProject.Api.Dtos;
 using ApiProject.Api.Entities;
@@ -20,10 +21,14 @@ public class UrunService
     private const int AramaLimiti = 100;
 
     private readonly AppDbContext _db;
+    private readonly ElasticService _elastic;
+    private readonly ILogger<UrunService> _logger;
 
-    public UrunService(AppDbContext db)
+    public UrunService(AppDbContext db, ElasticService elastic, ILogger<UrunService> logger)
     {
         _db = db;
+        _elastic = elastic;
+        _logger = logger;
     }
 
     public async Task<List<UrunDto>> AraAsync(string? arama, bool sadeceAktif, CancellationToken ct = default)
@@ -92,6 +97,16 @@ public class UrunService
         {
             // Aynı anda aynı kodla gelen iki istekte unique index ikincisini durdurur.
             return new UrunSonuc(UrunHata.KodAlinmis);
+        }
+
+        // SQL asıl kayıt yeri; Elasticsearch'e yazılamazsa ürün yine kaydedilmiş sayılır.
+        try
+        {
+            await _elastic.KaydetAsync(urun, ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Ürün {UrunId} Elasticsearch'e yazılamadı: {Hata}", urun.Id, ex.Message);
         }
 
         return new UrunSonuc(UrunHata.Yok, UrunDtoYap(urun));
